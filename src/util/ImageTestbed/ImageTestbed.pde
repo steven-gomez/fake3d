@@ -1,50 +1,29 @@
 /**
- * Generates a 3D scene of planets/sun and outputs a directory of
+ * Generates a 3D scene of a cube and outputs a directory of
  * images of this scene at different rotation increments.
  * Tested with Processing 2.0b7 on Mac OSX 10.7.5.
  * @author steveg
- *
- * Adapted from Planets example, by Andres Colubri
- * Sun and mercury textures from http://planetpixelemporium.com
  */
- 
-// Will render output frames to a buffer;
-// the sketch itself will just display a img copied from the buffer
+
 PImage img;
-PGraphics buffer;
+PGraphics buffer; // Buffer for rendering scene in a loop
 
 // Shapes and textures
-PShape sun;
-PImage suntex;
-PShape planet1;
-PImage surftex1;
-PShape planet2;
-PImage surftex2;
+PShape cube;
 
 /**
  * Set up the scene objects.
  */
 void setup() {
   size(500, 500, P3D);
-  suntex = loadImage("sun.jpg");  
-  surftex1 = loadImage("planet.jpg");  
-  surftex2 = loadImage("mercury.jpg");  
   
-  noStroke();
+  //noStroke();
   fill(255);
-  sphereDetail(40);
-
-  sun = createShape(SPHERE, 70);
-  sun.texture(suntex);  
-
-  planet1 = createShape(SPHERE, 40);
-  planet1.texture(surftex1);
   
-  planet2 = createShape(SPHERE, 20);
-  planet2.texture(surftex2);
+  cube = createShape(BOX, 100);
   
   buffer = createGraphics(500, 500, P3D);
-  renderScene(buffer);
+  //renderScene(buffer);
 }
 
 /**
@@ -61,12 +40,13 @@ void renderScene(PGraphics buffer) {
     for (int j = 0; j < incs; j++) {
       print(incs+", "+i+ ", "+j+" --- "); 
       scene(buffer, incs, i, j);//i, j);
-      buffer.save("images/planets-"+incs+"-"+i+"-"+j+".png");
+      buffer.save("images/scene-"+incs+"-"+i+"-"+j+".png");
     }
   }
   
   // Put the last frame, plus some debugging output, onto
   // the sketch canvas
+  /*
   int fontSize = 20;
   buffer.beginDraw();
   buffer.stroke(255);
@@ -77,10 +57,16 @@ void renderScene(PGraphics buffer) {
   buffer.endDraw();
   
   img = buffer.get(0, 0, buffer.width, buffer.height);
+  */
 }
 
 void draw() {
   background(30);
+  int increments = 360;
+  
+  scene(buffer, increments, -1 * mouseY / (height/increments), 
+    -1 * mouseX / (width/increments));
+  img = buffer.get(0, 0, buffer.width, buffer.height);
   image(img, 0, 0);
 }
 
@@ -141,15 +127,10 @@ void scene(PGraphics buffer, int maxIncs, int xInc, int yInc) {
   
   buffer.stroke(204, 102, 0);
   buffer.line(-200, 0, 0, 200, 0, 0);
-  buffer.shape(sun);
+  buffer.shape(cube);
 
   buffer.pointLight(255,  255,  255,  0,  0,  0);  
 
-  buffer.translate(width/2, 0, 0);  
-  buffer.shape(planet1);  
-  
-  buffer.translate(-0.75 * width,  -0.6 * height,  50);
-  buffer.shape(planet2);
   popMatrix();
   
   buffer.noLights();
