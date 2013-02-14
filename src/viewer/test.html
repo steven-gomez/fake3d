@@ -56,7 +56,7 @@
             function refreshCanvas() {
                 var xControl = $( "#xControl" ).slider( "value" ) % increments;
                 var yControl = $( "#yControl" ).slider( "value" ) % increments;
-                var url = "images/planets-"+increments+"-"+yControl+"-"+xControl+".png";
+                var url = "images/scene-"+increments+"-"+yControl+"-"+xControl+".png";
 
                 $( "#imageCanvas" ).css( "background", "url("+url+")" );
                 $( "#imageField" ).text(url);
